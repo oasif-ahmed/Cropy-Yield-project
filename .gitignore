@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+
+# Environment variables (keep .env.example)
+.env
+.env.*
+!.env.example
+
+# Backend
+backend/uploads/
+*.log
+npm-debug.log*
+
+# ML Service
+ml-service/venv/
+ml-service/saved_models/*.joblib
+__pycache__/
+*.pyc
+
+# Vite / frontend cache
+.vite/
+*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE / editor
+.idea/
+.vscode/
+*.swp

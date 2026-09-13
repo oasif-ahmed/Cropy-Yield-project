@@ -16,7 +16,7 @@ const MODEL_VERSION = '1.0.0';
 async function mlFetch(path, options = {}) {
   if (!ML_ENABLED) return null;
   const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), 5000);
+  const timer = setTimeout(() => ctrl.abort(), 30000);
   try {
     const res = await fetch(`${ML_BASE}${path}`, {
       ...options,

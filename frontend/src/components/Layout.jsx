@@ -88,7 +88,7 @@ function sidebarOpenFromStorage() {
 function Brand({ collapsed }) {
   const { t } = useLanguage();
   return (
-    <div className={cn('flex items-center gap-2.5', collapsed && 'justify-center')}>
+    <Link to="/" className={cn('flex items-center gap-2.5', collapsed && 'justify-center')}>
       <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-md shadow-emerald-600/25">
         <Sprout className="size-5" />
       </div>
@@ -98,7 +98,7 @@ function Brand({ collapsed }) {
           <p className="text-[11px] text-muted-foreground">AI-Based Crop Management</p>
         </div>
       )}
-    </div>
+    </Link>
   );
 }
 

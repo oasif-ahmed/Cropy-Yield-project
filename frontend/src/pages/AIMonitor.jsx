@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { api } from '../api/client.js';
 import { useLanguage } from '../i18n/LanguageContext.jsx';
 import { PageHeader, Card, Badge, Spinner, ErrorAlert, EmptyState } from '../components/ui.jsx';
-import { BrainCircuit } from 'lucide-react';
+import { BrainCircuit, TrendingUp, ScanSearch, Sprout, GraduationCap } from 'lucide-react';
 
 function formatTime(d) {
   if (!d) return '—';
@@ -86,10 +86,34 @@ export default function AIMonitor() {
 
             <Card title={t('AI ক্ষমতাসমূহ', 'AI Capabilities')}>
               <ul className="space-y-2 text-sm text-gray-700">
-                <li>✅ {t('ফলন পূর্বাভাস (মেশিন লার্নিং)', 'Yield Prediction (Machine Learning)')}</li>
-                <li>✅ {t('রোগ শনাক্তকরণ (ছবি বিশ্লেষণ)', 'Disease Detection (Image Analysis)')}</li>
-                <li>✅ {t('ফসল সুপারিশ (নলেজ বেস)', 'Crop Recommendation (Knowledge Base)')}</li>
-                <li>📌 {t('প্রশিক্ষণ চলছে', 'Training in progress')}</li>
+                <li className="flex items-start gap-2.5 rounded-md bg-emerald-50 px-3 py-2.5">
+                  <TrendingUp className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" />
+                  <div>
+                    <p className="font-semibold">{t('ফলন পূর্বাভাস', 'Yield Prediction')}</p>
+                    <p className="text-xs text-gray-600">{t('মেশিন লার্নিং মডেল দিয়ে ফলন অনুমান', 'Yield estimation via machine learning models')}</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-2.5 rounded-md bg-sky-50 px-3 py-2.5">
+                  <ScanSearch className="mt-0.5 h-4 w-4 shrink-0 text-sky-600" />
+                  <div>
+                    <p className="font-semibold">{t('রোগ শনাক্তকরণ', 'Disease Detection')}</p>
+                    <p className="text-xs text-gray-600">{t('ছবি বিশ্লেষণের মাধ্যমে রোগ চেনা', 'Identify diseases through image analysis')}</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-2.5 rounded-md bg-amber-50 px-3 py-2.5">
+                  <Sprout className="mt-0.5 h-4 w-4 shrink-0 text-amber-600" />
+                  <div>
+                    <p className="font-semibold">{t('ফসল সুপারিশ', 'Crop Recommendation')}</p>
+                    <p className="text-xs text-gray-600">{t('নলেজ বেস ও ML দিয়ে সেরা ফসল বাছাই', 'Best crop selection via knowledge base and ML')}</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-2.5 rounded-md bg-indigo-50 px-3 py-2.5">
+                  <GraduationCap className="mt-0.5 h-4 w-4 shrink-0 text-indigo-600" />
+                  <div>
+                    <p className="font-semibold">{t('মডেল প্রশিক্ষণ', 'Model Training')}</p>
+                    <p className="text-xs text-gray-600">{t('নতুন তথ্যে মডেল হালনাগাদ করা হয়', 'Models are retrained as new data accumulates')}</p>
+                  </div>
+                </li>
               </ul>
             </Card>
           </div>

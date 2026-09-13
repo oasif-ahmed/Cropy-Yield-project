@@ -62,6 +62,7 @@ const FadeContent = ({
     tl.to(el, {
       autoAlpha: 1,
       filter: 'blur(0px)',
+      clearProps: 'filter',
       duration: getSeconds(duration),
       ease: ease
     });

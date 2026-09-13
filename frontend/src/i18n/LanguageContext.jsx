@@ -1,4 +1,4 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { setActiveLang } from '../components/utils.js';
 
 const LanguageContext = createContext(null);
@@ -24,7 +24,10 @@ export function LanguageProvider({ children }) {
     document.documentElement.lang = lang === 'en' ? 'en' : 'bn';
   }, [lang]);
 
-  const t = useCallback((bn, en) => (lang === 'en' ? en ?? bn : bn), [lang]);
+  const langRef = useRef(lang);
+  langRef.current = lang;
+
+  const t = useCallback((bn, en) => (langRef.current === 'en' ? en ?? bn : bn), []);
 
   const toggle = useCallback(() => setLang((l) => (l === 'bn' ? 'en' : 'bn')), []);
   const setLangSafe = useCallback((l) => setLang(l === 'en' ? 'en' : 'bn'), []);

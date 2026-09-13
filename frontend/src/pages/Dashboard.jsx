@@ -29,6 +29,7 @@ import {
 } from 'lucide-react';
 import { ROLE_LABELS, cn, formatDate, getActiveLang } from '../components/utils.js';
 import { useLanguage } from '../i18n/LanguageContext.jsx';
+import { useTheme } from '../context/ThemeContext.jsx';
 import {
   AreaChart,
   Area,
@@ -222,14 +223,14 @@ function PriceTiles({ prices }) {
       {prices.map((p, i) => (
         <div
           key={p.crop_name + p.district}
-          className="group overflow-hidden rounded-xl border border-gray-100 bg-white text-center shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
+          className="group overflow-hidden rounded-xl border border-border bg-card text-center shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
         >
           <div className={cn('px-2 py-1.5 text-sm font-bold text-white', colors[i % colors.length])}>
             {p.crop_name}
           </div>
           <div className="px-2 py-2">
-            <p className="text-sm font-bold text-gray-900">{bnNum(p.price, 1, locale)}/{p.unit}</p>
-            <p className="text-[11px] text-gray-500">{p.district || '—'}</p>
+            <p className="text-sm font-bold text-foreground">{bnNum(p.price, 1, locale)}/{p.unit}</p>
+            <p className="text-[11px] text-muted-foreground">{p.district || '—'}</p>
           </div>
         </div>
       ))}
@@ -269,6 +270,8 @@ function ActivityList({ items, avatarColor = 'bg-emerald-100 text-emerald-700' }
 export default function Dashboard() {
   const { lang, t } = useLanguage();
   const { user } = useAuth();
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
   const areaId = useId();
   const barId = useId();
   const [data, setData] = useState(null);
@@ -368,6 +371,10 @@ export default function Dashboard() {
     .map((p) => ({ month: formatDate(p.harvested_at), total_kg: Number(p.total_quantity_kg) || 0 }));
 
   const divColor = ['#10b981', '#0ea5e9', '#6366f1', '#f59e0b', '#8b5cf6', '#f43f5e', '#14b8a6', '#84cc16'];
+  const gridColor = isDark ? 'rgba(255,255,255,0.08)' : '#eef2f7';
+  const axisColor = isDark ? 'rgba(255,255,255,0.15)' : '#e2e8f0';
+  const tickColor = isDark ? '#94a3b8' : '#94a3b8';
+  const cursorFill = isDark ? 'rgba(255,255,255,0.06)' : '#f8fafc';
   const divisionItems = (data.divisionStats || []).map((d, i) => ({
     label: d.division,
     value: Number(d.farmer_count),
@@ -419,6 +426,7 @@ export default function Dashboard() {
         {/* production trend (tall) */}
         <div className="animate-fade-up mb-5 break-inside-avoid" style={{ animationDelay: '120ms' }}>
           <Panel
+            className="glass-card"
             title={isFarmer ? t('আমার উৎপাদনের প্রবণতা', 'My Production Trend') : t('উৎপাদন প্রবণতা (মাসিক, কেজি)', 'Production Trend (monthly, kg)')}
             subtitle={isFarmer ? t('হারভেস্ট রেকর্ড অনুযায়ী', 'According to harvest records') : t('সর্বশেষ ৬ মাস', 'Last 6 months')}
             actions={<Badge tone="green">{isFarmer ? farmerTrend.length : productionTrend.length}{t('টি পয়েন্ট', ' points')}</Badge>}
@@ -433,8 +441,8 @@ export default function Dashboard() {
                         <stop offset="100%" stopColor="#10b981" stopOpacity={0.02} />
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                    <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#94a3b8' }} tickLine={false} axisLine={{ stroke: '#e2e8f0' }} />
+                    <CartesianGrid strokeDasharray="3 3" stroke={gridColor} vertical={false} />
+                    <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#94a3b8' }} tickLine={false} axisLine={{ stroke: axisColor }} />
                     <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} tickLine={false} axisLine={false} />
                     <Tooltip content={<ChartTip unit={t(' কেজি', ' kg')} />} />
                     <Area type="monotone" dataKey="total_kg" name={t('উৎপাদন', 'Production')} stroke="#10b981" strokeWidth={2.5} fill={`url(#${areaId})`} animationDuration={1000} dot={{ r: 3, fill: '#10b981', strokeWidth: 0 }} />
@@ -452,8 +460,8 @@ export default function Dashboard() {
                       <stop offset="100%" stopColor="#10b981" stopOpacity={0.02} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                  <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#94a3b8' }} tickLine={false} axisLine={{ stroke: '#e2e8f0' }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke={gridColor} vertical={false} />
+                  <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#94a3b8' }} tickLine={false} axisLine={{ stroke: axisColor }} />
                   <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} tickLine={false} axisLine={false} />
                   <Tooltip content={<ChartTip unit={t(' কেজি', ' kg')} />} />
                   <Area type="monotone" dataKey="total_kg" name={t('উৎপাদন', 'Production')} stroke="#10b981" strokeWidth={2.5} fill={`url(#${areaId})`} animationDuration={1000} activeDot={{ r: 5 }} />
@@ -473,6 +481,7 @@ export default function Dashboard() {
         {/* top crops (medium) */}
         <div className="animate-fade-up mb-5 break-inside-avoid" style={{ animationDelay: '150ms' }}>
           <Panel
+            className="glass-card"
             title={t('শীর্ষ ফসল (জমির ভিত্তিতে)', 'Top Crops (by land area)')}
             subtitle={t('কৃষি জমির বণ্টন', 'Distribution of farmland')}
             actions={<Badge tone="indigo">{data.openDiseases} {t('খোলা রোগ', 'open diseases')}</Badge>}
@@ -486,10 +495,10 @@ export default function Dashboard() {
                       <stop offset="100%" stopColor="#065f46" stopOpacity={0.95} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" vertical={false} />
-                  <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#64748b' }} tickLine={false} axisLine={{ stroke: '#e2e8f0' }} />
+                  <CartesianGrid strokeDasharray="3 3" stroke={gridColor} vertical={false} />
+                  <XAxis dataKey="name" tick={{ fontSize: 11, fill: tickColor }} tickLine={false} axisLine={{ stroke: axisColor }} />
                   <YAxis tick={{ fontSize: 11, fill: '#94a3b8' }} tickLine={false} axisLine={false} />
-                  <Tooltip content={<ChartTip unit={t(' বিঘা', ' bigha')} />} cursor={{ fill: '#f8fafc' }} />
+                  <Tooltip content={<ChartTip unit={t(' বিঘা', ' bigha')} />} cursor={{ fill: cursorFill }} />
                   <Bar dataKey="total_area" name={t('জমি', 'Land')} radius={[6, 6, 0, 0]} animationDuration={900}>
                     {topCrops.map((c, i) => (
                       <Cell key={c.name} fill={i === 0 ? `url(#${barId})` : barColors[i % barColors.length]} />
@@ -506,7 +515,7 @@ export default function Dashboard() {
         {/* division / upcoming (medium) */}
         {isFarmer ? (
           <div className="animate-fade-up mb-5 break-inside-avoid" style={{ animationDelay: '280ms' }}>
-            <Panel title={t('আসন্ন ফসল কাটা', 'Upcoming Harvests')} subtitle={t('পরবর্তী ১৪ দিন', 'Next 14 days')} pad={false}>
+            <Panel title={t('আসন্ন ফসল কাটা', 'Upcoming Harvests')} subtitle={t('পরবর্তী ১৪ দিন', 'Next 14 days')} pad={false} className="glass-card">
               <div className="px-5 py-2">
                 {data.upcoming?.length ? (
                   <ul className="divide-y divide-gray-100">
@@ -528,6 +537,7 @@ export default function Dashboard() {
         ) : (
           <div className="animate-fade-up mb-5 break-inside-avoid" style={{ animationDelay: '280ms' }}>
             <Panel
+              className="glass-card"
               title={t('বিভাগ অনুযায়ী কৃষক', 'Farmers by Division')}
               subtitle={t('সবচেয়ে বেশি প্রথমে', 'Highest first')}
               actions={<Badge tone="blue">{data.divisionStats?.length}{t('টি', '')}</Badge>}
@@ -543,7 +553,7 @@ export default function Dashboard() {
 
         {/* market prices (short) */}
         <div className="animate-fade-up mb-5 break-inside-avoid" style={{ animationDelay: '220ms' }}>
-          <Panel title={t('সর্বশেষ বাজারদর', 'Latest Market Prices')} subtitle={t('প্রতি কেজি (টাকা)', 'Per kg (Taka)')}>
+          <Panel className="glass-card" title={t('সর্বশেষ বাজারদর', 'Latest Market Prices')} subtitle={t('প্রতি কেজি (টাকা)', 'Per kg (Taka)')}>
             <PriceTiles prices={data.latestPrices} />
           </Panel>
         </div>
@@ -551,6 +561,7 @@ export default function Dashboard() {
         {/* recent productions (tall list) */}
         <div className="animate-fade-up mb-5 break-inside-avoid" style={{ animationDelay: '290ms' }}>
           <Panel
+            className="glass-card"
             title={t('সাম্প্রতিক উৎপাদন', 'Recent Production')}
             subtitle={t('সর্বশেষ রেকর্ড', 'Latest records')}
             pad={false}

@@ -16,7 +16,7 @@ const MODEL_VERSION = '1.0.0';
 async function mlFetch(path, options = {}) {
   if (!ML_ENABLED) return null;
   const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), 30000);
+  const timer = setTimeout(() => ctrl.abort(), 120000);
   try {
     const res = await fetch(`${ML_BASE}${path}`, {
       ...options,
@@ -97,7 +97,7 @@ export async function predictYield(crop, soil = null, weatherData = null) {
 export async function detectDisease(imageMultipart, cropName) {
   if (!ML_ENABLED) return null;
   const ctrl = new AbortController();
-  const timer = setTimeout(() => ctrl.abort(), 8000);
+  const timer = setTimeout(() => ctrl.abort(), 90000);
   try {
     const formData = new FormData();
     let blob;
